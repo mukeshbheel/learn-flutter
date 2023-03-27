@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">"learn flutter"</string>
+    <string name="facebook_app_id">637768691518094</string>
+    <string name="fb_login_protocol_scheme">fb637768691518094</string>
+    <string name="facebook_client_token">c5db51f31f838316e1f77c03c5f4cf05</string>
+</resources>
+
+
+
+
