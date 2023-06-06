@@ -21,7 +21,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  int selectedTab = 2;
+  int selectedTab = 0;
   var selectedStory;
 
   ImagePicker imagePicker = ImagePicker();
@@ -52,6 +52,7 @@ class _HomeState extends State<Home> {
   LinearGradient greenGradient = const LinearGradient(colors: [Colors.green, Colors.black]);
   LinearGradient blueGradient = const LinearGradient(colors: [Colors.blue, Colors.black]);
   LinearGradient pinkGradient = const LinearGradient(colors: [Colors.pink, Colors.black]);
+  LinearGradient greyGradient = const LinearGradient(colors: [Colors.grey, Colors.black]);
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference myStories = FirebaseFirestore.instance.collection('myStories');
@@ -97,9 +98,65 @@ class _HomeState extends State<Home> {
         .then((value){
       print("Story Saved");
       showSnackbar(context, 'Story saved successfully.', type: 'success');
+      setState(() {
+        selectedTab = 2;
+        newTitle.text = '';
+        newImage.text = '';
+        newStory.text = '';
+      });
 
     } )
         .catchError((error) => showSnackbar(context, 'Failed to save story: $error',));
+  }
+
+  Future<void> deleteStory(story) async{
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return  Center(
+          child: AlertDialog(
+            contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            backgroundColor: Colors.grey[300],
+            title: GradientText("Deleting this story...",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: kFontFamily), gradient: redGradient,),
+            content: GradientText("Are you sure ?", gradient: greyGradient, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: kFontFamily),),
+            actions: [
+              NeumorphismContainer(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+                  child: TextButton(
+                    child: GradientText("Yes",style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: kFontFamily), gradient: redGradient,),
+                    onPressed:  () async {
+                      await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+                        await myTransaction.delete(story.reference);
+                      });
+                      setState(() {
+                        selectedStory = null;
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+              NeumorphismContainer(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, ),
+                  child: TextButton(
+                    child: GradientText("No",style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: kFontFamily), gradient: redGradient,),
+                    onPressed:  () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+
+
+
   }
 
   selectTab(tab){
@@ -142,6 +199,8 @@ class _HomeState extends State<Home> {
   Widget storyDetails(){
     return const Text('');
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -513,7 +572,50 @@ class _HomeState extends State<Home> {
                                           letterSpacing: 1,
                                           wordSpacing: 3,
                                           height: 2,
-                                        ),)
+                                        ),),
+
+                                        const SizedBox(height: 20,),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: NeumorphismContainer(
+                                                width: 200,
+                                                // height: 100,
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                    child: GradientText(
+                                                      'Edit',
+                                                      gradient: greenGradient,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20,),
+                                            Expanded(
+                                              child: InkWell(
+                                                onTap: () async{
+                                                  deleteStory(selectedStory);
+                                                },
+                                                child: NeumorphismContainer(
+                                                  width: 200,
+                                                  // height: 100,
+                                                  child: Center(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                      child: GradientText(
+                                                        'Delete',
+                                                        gradient: redGradient,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10,),
                                       ],
                                     ),
                                   ),
