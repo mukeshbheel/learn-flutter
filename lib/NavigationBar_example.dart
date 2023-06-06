@@ -5,6 +5,7 @@ import 'package:learn_flutter/GoogleAndFacebookLogin.dart';
 import 'package:learn_flutter/GoogleMapsAutocomplete.dart';
 import './AnimatedBuilder_example.dart';
 import 'Components/NeumorphismIcon.dart';
+import 'Home.dart';
 
 class NavigationBarExample extends StatefulWidget {
   const NavigationBarExample({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-
+        backgroundColor: Colors.grey[300],
         bottomNavigationBar: Container(
         color: Colors.transparent,
           height: 70,
@@ -46,12 +47,12 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
           ),
         ),
         body: [
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.red,
-            child: const Center(child: Text('Home')),
-          ),
+          Home(),          // Container(
+          //   width: double.infinity,
+          //   height: double.infinity,
+          //   color: Colors.red,
+          //   child: const Center(child: Text('Home')),
+          // ),
           Container(
             color: Colors.blue,
             child: const Center(child: Text('Settings')),

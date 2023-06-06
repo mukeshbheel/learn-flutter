@@ -39,6 +39,10 @@ dependencies:
   firebase_auth: ^4.3.0
   firebase_core: ^2.8.0
   flutter_facebook_auth: ^5.0.8
+  cloud_firestore: ^4.8.0
+  image_picker: ^0.8.7+5
+  firebase_storage: ^11.2.2
+
 
 dev_dependencies:
   flutter_test:
@@ -77,9 +81,14 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
+  fonts:
+     - family: Schyler
+       fonts:
+         - asset: assets/Fonts/JosefinSans-Bold.ttf
+         - asset: assets/Fonts/JosefinSans-Light.ttf
+         - asset: assets/Fonts/JosefinSans-Medium.ttf
+         - asset: assets/Fonts/JosefinSans-Regular.ttf
+         - asset: assets/Fonts/JosefinSans-Thin.ttf
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

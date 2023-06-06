@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.learn_flutter">
+    package="com.app.easy_write">
 
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -10,7 +10,7 @@
 
 
    <application
-        android:label="learn_flutter"
+        android:label="easy_write"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

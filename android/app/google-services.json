@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "674263871325",
-    "project_id": "learnflutter-2cd5c",
-    "storage_bucket": "learnflutter-2cd5c.appspot.com"
+    "project_number": "794523815969",
+    "project_id": "easywrite-12d90",
+    "storage_bucket": "easywrite-12d90.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:674263871325:android:72ed92bb2d689169f002b4",
+        "mobilesdk_app_id": "1:794523815969:android:a359e62623a857a0225360",
         "android_client_info": {
-          "package_name": "com.example.learn_flutter"
+          "package_name": "com.app.easy_write"
         }
       },
       "oauth_client": [
         {
-          "client_id": "674263871325-0airjs5ogr3sslqvsd2smhn8onn12829.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.learn_flutter",
-            "certificate_hash": "bfa19a63d22caa9315cba9e2571eae7bd7237f19"
-          }
-        },
-        {
-          "client_id": "674263871325-mbind5s66qn6q1cfbpdcal69h0rp5asc.apps.googleusercontent.com",
+          "client_id": "794523815969-9tc3n5e6sgjjjl0gl0v7cko1u8u4m1fm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCbwFyFPG_WYpcEhAqzBde8kDdOmh6ptOk"
+          "current_key": "AIzaSyB7sYLh22VscFW_ketpG9LaKV7bg7uANWk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "674263871325-mbind5s66qn6q1cfbpdcal69h0rp5asc.apps.googleusercontent.com",
+              "client_id": "794523815969-9tc3n5e6sgjjjl0gl0v7cko1u8u4m1fm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
