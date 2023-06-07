@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:learn_flutter/Components/GradientText.dart';
 import 'package:learn_flutter/Components/NeumorphismContainer.dart';
+import 'package:learn_flutter/Text.dart';
 import 'package:learn_flutter/Utils/Constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:learn_flutter/Utils/Global.dart';
@@ -22,6 +23,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   int selectedTab = 0;
+  int selectedType = 0;
   var selectedStory;
 
   bool isEditing = false;
@@ -85,6 +87,7 @@ class _HomeState extends State<Home> {
           newImage.text = '';
           newStory.text = '';
           file = File('');
+          selectedType = 0;
         });
 
       } )
@@ -134,6 +137,7 @@ class _HomeState extends State<Home> {
             setState(() {
               isEditing = false;
               selectedTab = 2;
+              selectedType = 0;
               selectedStory = updatedStory;
               file = File('');
             });
@@ -246,6 +250,19 @@ class _HomeState extends State<Home> {
       newStory.text = '';
       newImage.text = '';
       newTitle.text = '';
+      selectedType = 0;
+    });
+  }
+
+  selectType(type){
+    setState(() {
+      selectedType == type ? selectedTab = 0 :
+      selectedType = type;
+      // selectedStory = null;
+      // isEditing = false;
+      // newStory.text = '';
+      // newImage.text = '';
+      // newTitle.text = '';
     });
   }
 
@@ -285,6 +302,12 @@ class _HomeState extends State<Home> {
     setState(() {
       isEditing = true;
       selectedTab = 1;
+      selectedType = 1;
+      // var data = await selectedStory.data;
+      // debugPrint(data.toString());
+      // if(selectedStory.data.type == null){
+
+      // }
     });
   }
 
@@ -422,20 +445,95 @@ class _HomeState extends State<Home> {
 
                 //----------------------------------------section 4-------------------
                 if(selectedTab == 1)
+
                 SizedBox(
                   width: double.infinity,
                   child: Column(
                     children: [
+                      if(!isEditing)
                       const SizedBox(height: 20,),
+                      if(!isEditing)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            if(!isEditing)
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: (){
+                                    selectType(1);
+                                  },
+                                  child: NeumorphismContainer(
+                                    // height: 100,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                                      child: GradientText(
+                                        'Write Normal Story',
+                                        gradient: blueGradient,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10,),
+
+                                if(selectedType == 1)
+                                Icon(Icons.double_arrow_sharp, color: Colors.blue,)
+                              ],
+                            ),
+                            const SizedBox(height: 10,),
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: (){
+                                    selectType(2);
+                                  },
+                                  child: NeumorphismContainer(
+                                    // height: 100,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                                      child: GradientText(
+                                        'Write Story with Random Words',
+                                        gradient: blueGradient,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10,),
+
+                                if(selectedType == 2)
+                                  Icon(Icons.double_arrow_sharp, color: Colors.blue,)
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+
+                      if(selectedType != 0)
+                      const SizedBox(height: 20,),
+
+                      if(selectedType == 1)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: NeumorphismContainer(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
                             child: SizedBox(
-                              height: 400,
+                              height: 500,
                               child: Column(
                                 children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                                    child: Row(
+                                      children: [
+                                        GradientText('Normal Story', gradient: blueGradient)
+                                      ],
+                                    ),
+                                  ),
                                   NeumorphismContainer(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -542,11 +640,11 @@ class _HomeState extends State<Home> {
                                             width: 200,
                                             height: 40,
                                             child: Padding(
-                                              padding: EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Center(child:
                                               GradientText(
                                                 '${isLoading ? 'Please wait...' : (isEditing ? 'Update' : 'Save it now')}',
-                                                gradient: LinearGradient(
+                                                gradient: const LinearGradient(
                                                   colors: [
                                                     Colors.blue,
                                                     Colors.black
@@ -576,7 +674,7 @@ class _HomeState extends State<Home> {
                                             width: 200,
                                             height: 40,
                                             child: Padding(
-                                              padding: EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Center(child:
                                               GradientText(
                                                 'Cancel',
@@ -596,9 +694,31 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
+
+                      if(selectedType == 2)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: NeumorphismContainer(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 15,),
+                                Row(
+                                  children: [
+                                    const SizedBox(width: 10,),
+                                    GradientText('Story with Random Words', gradient: blueGradient)
+                                  ],
+                                ),
+                                const SizedBox(height: 15,),
+                                Test(),
+                              ],
+                            ),
+                          ),
+                        ),
+
                     ],
                   ),
                 ),
+
 
                 if(selectedTab == 2 && selectedStory == null)
                   Column(

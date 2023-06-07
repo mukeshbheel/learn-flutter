@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/AnimatedContainer_example.dart';
-import 'package:learn_flutter/AnimatedOpacity_example.dart';
-import 'package:learn_flutter/GoogleAndFacebookLogin.dart';
-import 'package:learn_flutter/GoogleMapsAutocomplete.dart';
-import './AnimatedBuilder_example.dart';
+import 'package:learn_flutter/Text.dart';
 import 'Components/NeumorphismIcon.dart';
 import 'Home.dart';
 
@@ -48,10 +44,7 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
         ),
         body: [
           const Home(),
-          Container(
-            color: Colors.blue,
-            child: const Center(child: Text('Settings')),
-          ),
+          Test(),
           Container(
             color: Colors.amber,
             child: const Center(child: Text('profile')),

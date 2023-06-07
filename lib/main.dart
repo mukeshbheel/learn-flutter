@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import './AnimatedBuilder_example.dart';
 import './NavigationBar_example.dart';
 import 'package:firebase_core/firebase_core.dart';
 

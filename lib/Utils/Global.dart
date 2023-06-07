@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/Components/NeumorphismContainer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Components/GradientText.dart';
 import 'Constant.dart';
@@ -101,4 +102,13 @@ showSnackbar(context, message, { String type = 'error'}){
       ],
     ),
   ));
+}
+
+
+Future<void> searchWord(word) async {
+
+  final Uri _url = Uri.parse('https://www.google.com/search?q=$word meaning+in+english');
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
+  }
 }
