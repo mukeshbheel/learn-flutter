@@ -7,3 +7,4 @@ LinearGradient greenGradient = const LinearGradient(colors: [Colors.green, Color
 LinearGradient blueGradient = const LinearGradient(colors: [Colors.blue, Colors.black]);
 LinearGradient pinkGradient = const LinearGradient(colors: [Colors.pink, Colors.black]);
 LinearGradient redGradient = const LinearGradient(colors: [Colors.red, Colors.black]);
+LinearGradient greyGradient = const LinearGradient(colors: [Colors.grey, Colors.black]);

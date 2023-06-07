@@ -24,35 +24,12 @@ class _HomeState extends State<Home> {
   int selectedTab = 0;
   var selectedStory;
 
+  bool isEditing = false;
+  bool isLoading = false;
+
   ImagePicker imagePicker = ImagePicker();
   File file = File('');
   late String imageUrl;
-
-  Future pickImageGallery() async {
-    debugPrint('haalo');
-    var image = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        file = File(image.path);
-      });
-    }
-  }
-
-  uploadProfileImage() async {
-    Reference reference = FirebaseStorage.instance
-        .ref()
-        .child('profileImage/${file.path.split('/').last}');
-    UploadTask uploadTask = reference.putFile(file);
-    TaskSnapshot snapshot = await uploadTask;
-    imageUrl = await snapshot.ref.getDownloadURL();
-    print(imageUrl);
-    newImage.text = imageUrl;
-  }
-
-  LinearGradient greenGradient = const LinearGradient(colors: [Colors.green, Colors.black]);
-  LinearGradient blueGradient = const LinearGradient(colors: [Colors.blue, Colors.black]);
-  LinearGradient pinkGradient = const LinearGradient(colors: [Colors.pink, Colors.black]);
-  LinearGradient greyGradient = const LinearGradient(colors: [Colors.grey, Colors.black]);
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference myStories = FirebaseFirestore.instance.collection('myStories');
@@ -61,52 +38,123 @@ class _HomeState extends State<Home> {
   TextEditingController newImage = TextEditingController();
   TextEditingController newStory = TextEditingController();
 
-  // List myStories = [
-  //   {
-  //     'id'    : 1,
-  //     'title' : 'The Little Boy and The Forest',
-  //     'image' : 'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/short-story-thumbnail-design-template-c8d3daba0e4410fb1f3d7876bb2796b3_screen.jpg?ts=1589979453',
-  //     'story' : 'Nothing to show yet',
-  //   },
-  //   {
-  //     'id'    : 2,
-  //     'title' : 'Kitty Monkey',
-  //     'image' : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC3DFqG2AOLKS6MgUPqlSra5QAXV4etTDy4Q&usqp=CAU',
-  //     'story' : 'Nothing to show yet',
-  //   },
-  //   {
-  //     'id'    : 3,
-  //     'title' : 'An Unknown letter',
-  //     'image' : 'https://cdn.trendhunterstatic.com/phpthumbnails/241/241101/241101_1_800.jpeg',
-  //     'story' : "A practical joker, knowing what he had done, waited until he was asleep, then removed the gourd and tied it around his own leg. He, too lay down on the caravanserai floor to sleep. The fool woke first, and saw the gourd. At first he thought that this other man must be him. Then he attacked the other, shouting: ‘If you are me: then who, for heaven’s sake, who and where am I?",
-  //   },
-  // ];
+  Future<void> addStory(context) async {
+    setState(() {
+      isLoading = true;
+    });
 
-  Future<void> addStory() async {
-    if(newTitle.text.isEmpty || newStory.text.isEmpty || newImage.text.isEmpty){
-      showSnackbar(context, 'Title, Image Link and Story can not be empty.');
-      return;
-    }
+    // await uploadProfileImage();
+    //
+    //
+    // if(newTitle.text.isEmpty || newStory.text.isEmpty || newImage.text.isEmpty){
+    //   showSnackbar(context, 'Title, Image Link and Story can not be empty.');
+    //   return;
+    // }
+    if(!isEditing){
+      debugPrint('filePath : ${file.path}');
 
-    // Call the user's CollectionReference to add a new user
-    myStories
-        .add({
-      'title': newTitle.text, // John Doe
-      'image': newImage.text, // Stokes and Sons
-      'story': newStory.text, // 42
-    })
-        .then((value){
-      print("Story Saved");
-      showSnackbar(context, 'Story saved successfully.', type: 'success');
+      if(newTitle.text.isEmpty || file.path.isEmpty || newStory.text.isEmpty){
+        showSnackbar(context, 'Title, Image Link and Story can not be empty.');
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      await uploadProfileImage();
+      if(newImage.text.isEmpty){
+        showSnackbar(context, 'Image could not be uploaded.');
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      myStories
+          .add({
+        'title': newTitle.text, // John Doe
+        'image': newImage.text, // Stokes and Sons
+        'story': newStory.text, // 42
+      })
+          .then((value){
+        print("Story Saved");
+        showSnackbar(context, 'Story saved successfully.', type: 'success');
+        setState(() {
+          selectedTab = 2;
+          newTitle.text = '';
+          newImage.text = '';
+          newStory.text = '';
+          file = File('');
+        });
+
+      } )
+          .catchError((error) => showSnackbar(context, 'Failed to save story: $error',));
+
       setState(() {
-        selectedTab = 2;
-        newTitle.text = '';
-        newImage.text = '';
-        newStory.text = '';
+        isLoading = false;
       });
+    }else{
 
-    } )
-        .catchError((error) => showSnackbar(context, 'Failed to save story: $error',));
+      // // newImage.text = file.path;
+      // file = File(newImage.text);
+
+      if(newTitle.text.isEmpty || (file.path.isEmpty && newImage.text.isEmpty) || newImage.text.isEmpty){
+        showSnackbar(context, 'Title, Image Link and Story can not be empty.');
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      if(file.path.isNotEmpty) {
+        await uploadProfileImage();
+      }
+      if(newImage.text.isEmpty){
+        showSnackbar(context, 'Image could not be uploaded.');
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      var collection = FirebaseFirestore.instance.collection('myStories');
+      print('story id : ${selectedStory.id}');
+
+      collection
+          .doc(selectedStory.id)
+          .update({
+        'title': newTitle.text, // John Doe
+        'image': newImage.text, // Stokes and Sons
+        'story': newStory.text, // 42
+      }) // <-- Updated data
+          .then((_) async {
+            print('Success');
+            showSnackbar(context, 'Story updated successfully.', type: 'success');
+            var updatedStory = await getSingleStory(selectedStory.id);
+            setState(() {
+              isEditing = false;
+              selectedTab = 2;
+              selectedStory = updatedStory;
+              file = File('');
+            });
+          })
+          .catchError((error) => showSnackbar(context, 'Failed to update story: $error',));
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future getSingleStory(storyId) async{
+    var collection = FirebaseFirestore.instance.collection('myStories');
+    var docSnapshot = await collection.doc(storyId).get();
+    if (docSnapshot.exists) {
+      return docSnapshot;
+      Map<String, dynamic>? data = docSnapshot.data();
+      var value = data?['some_field']; // <-- The value you want to retrieve.
+      // Call setState if needed.
+    }
   }
 
   Future<void> deleteStory(story) async{
@@ -159,11 +207,45 @@ class _HomeState extends State<Home> {
 
   }
 
+  Future pickImageGallery() async {
+    debugPrint('haalo');
+    var image = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      print('image file : ${image.path}');
+      setState(() {
+        file = File(image.path);
+      });
+    }
+  }
+
+  uploadProfileImage() async {
+    newImage.text = '';
+
+    // Create a storage reference from our app
+    final storageRef = FirebaseStorage.instance.ref();
+
+// Create a reference to "mountains.jpg"
+    final mountainsRef = storageRef.child("${file.path.split('/').last}");
+
+// Create a reference to 'images/mountains.jpg'
+    final mountainImagesRef = storageRef.child("images/${file.path.split('/').last}");
+
+    UploadTask uploadTask = mountainImagesRef.putFile(file);
+    TaskSnapshot snapshot = await uploadTask;
+    imageUrl = await snapshot.ref.getDownloadURL();
+    print(imageUrl);
+    newImage.text = imageUrl;
+  }
+
   selectTab(tab){
     setState(() {
       selectedTab == tab ? selectedTab = 0 :
       selectedTab = tab;
       selectedStory = null;
+      isEditing = false;
+      newStory.text = '';
+      newImage.text = '';
+      newTitle.text = '';
     });
   }
 
@@ -177,7 +259,7 @@ class _HomeState extends State<Home> {
   getTitle(){
     switch(selectedTab){
       case 1:
-        return 'Writing a Story...';
+        return isEditing ? 'Editing the Story...' : 'Writing a Story...';
       case 2:
         return 'Looking at my stories...';
       default:
@@ -196,11 +278,15 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Widget storyDetails(){
-    return const Text('');
+  editing(){
+    newTitle.text = selectedStory['title'];
+    newImage.text = selectedStory['image'];
+    newStory.text = selectedStory['story'];
+    setState(() {
+      isEditing = true;
+      selectedTab = 1;
+    });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -380,35 +466,35 @@ class _HomeState extends State<Home> {
                                   NeumorphismContainer(
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      // child: InkWell(
-                                      //   onTap: ()async{
-                                      //     await pickImageGallery();
-                                      //     if(file.path.isNotEmpty){
-                                      //       uploadProfileImage();
-                                      //     }
-                                      //   },
+                                      child: InkWell(
+                                        onTap: ()async{
+                                          await pickImageGallery();
+                                        },
                                         child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             const SizedBox(width: 10,),
-                                            GradientText('Image Link', gradient: blueGradient),
+                                            GradientText('Upload Image', gradient: blueGradient),
                                             const SizedBox(width: 10,),
+                                            if(file.path.isNotEmpty || newImage.text.isNotEmpty)
                                             Expanded(
-                                              child: NeumorphismContainer(
+                                              child: Container(
                                                 child: Padding(
                                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                  child: TextField(
-                                                    controller: newImage,
-                                                    // readOnly: true,
-                                                    decoration: const InputDecoration(
-                                                        border: InputBorder.none
-                                                    ),
-                                                  ),
+                                                  child: !file.path.isNotEmpty ? Image.network(newImage.text, width: 50, height: 50,) : Image.file(file, width: 50, height: 50,),
+                                                  // child: TextField(
+                                                  //   controller: newImage,
+                                                  //   readOnly: true,
+                                                  //   decoration: const InputDecoration(
+                                                  //       border: InputBorder.none
+                                                  //   ),
+                                                  // ),
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                      // ),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 20,),
@@ -445,28 +531,63 @@ class _HomeState extends State<Home> {
                                     // ),
                                   ),
                                   const SizedBox(height: 10,),
-                                  InkWell(
-                                    onTap: ()async{
-                                      addStory();
-                                    },
-                                    child: NeumorphismContainer(
-                                      width: 200,
-                                      height: 40,
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Center(child:
-                                        GradientText(
-                                          'Save it now',
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.blue,
-                                              Colors.black
-                                            ]
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: ()async{
+                                            addStory(context);
+                                          },
+                                          child: NeumorphismContainer(
+                                            width: 200,
+                                            height: 40,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Center(child:
+                                              GradientText(
+                                                '${isLoading ? 'Please wait...' : (isEditing ? 'Update' : 'Save it now')}',
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.blue,
+                                                    Colors.black
+                                                  ]
+                                                ),
+                                              ),
+                                              ),
+                                            ),
                                           ),
                                         ),
+                                      ),
+                                      const SizedBox(width: 20,),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: ()async{
+                                            if(isEditing){
+                                              setState(() {
+                                                isEditing = false;
+                                                selectedTab = 2;
+                                              });
+                                            }else{
+                                              selectTab(0);
+                                            }
+
+                                          },
+                                          child: NeumorphismContainer(
+                                            width: 200,
+                                            height: 40,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Center(child:
+                                              GradientText(
+                                                'Cancel',
+                                                gradient: blueGradient,
+                                              ),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                   const SizedBox(height: 10,),
                                 ],
@@ -536,7 +657,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
 
-                if(selectedStory != null)
+                if(selectedTab == 2  && selectedStory != null)
                   Column(
                     children: [
                       Stack(
@@ -578,15 +699,20 @@ class _HomeState extends State<Home> {
                                         Row(
                                           children: [
                                             Expanded(
-                                              child: NeumorphismContainer(
-                                                width: 200,
-                                                // height: 100,
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                                                    child: GradientText(
-                                                      'Edit',
-                                                      gradient: greenGradient,
+                                              child: InkWell(
+                                                onTap: (){
+                                                  editing();
+                                                },
+                                                child: NeumorphismContainer(
+                                                  width: 200,
+                                                  // height: 100,
+                                                  child: Center(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                      child: GradientText(
+                                                        'Edit',
+                                                        gradient: greenGradient,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
