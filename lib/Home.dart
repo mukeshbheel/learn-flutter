@@ -612,7 +612,7 @@ class _HomeState extends State<Home> {
                                                   Expanded(
                                                     child: InkWell(
                                                       onTap: () async{
-                                                        controller.deleteStory(controller.selectedStory);
+                                                        controller.deleteStory(controller.selectedStory, context);
                                                       },
                                                       child: NeumorphismContainer(
                                                         width: 200,

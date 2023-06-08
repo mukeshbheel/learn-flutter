@@ -15,6 +15,8 @@ import '../Utils/Global.dart';
 
 class HomeController extends GetxController{
 
+  var storyFirebaseDoc;
+
   RxString randomWord = ''.obs;
 
   RxString story = ''.obs;
@@ -148,10 +150,10 @@ class HomeController extends GetxController{
     }
   }
 
-  Future<void> deleteStory(story,) async{
+  Future<void> deleteStory(story, context) async{
 
     showDialog(
-      context: Get.context!,
+      context: context,
       builder: (BuildContext context) {
         return  Center(
           child: AlertDialog(
@@ -167,7 +169,7 @@ class HomeController extends GetxController{
                     child: GradientText("Yes",style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFamily: kFontFamily), gradient: redGradient,),
                     onPressed:  () async {
                       await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
-                        await myTransaction.delete(story.reference);
+                        await myTransaction.delete(storyFirebaseDoc.reference);
                       });
                         selectedStory.value = {};
                       Navigator.pop(context);
@@ -251,8 +253,10 @@ class HomeController extends GetxController{
     if(story == null){
       selectedStory.value = {};
       selectedStoryId.value = '';
+      storyFirebaseDoc = null;
     }else{
 
+      storyFirebaseDoc = story;
       selectedStoryId.value = story.id;
       debugPrint('selected story id : ${selectedStoryId}');
       // selectedTab == tab ? selectedTab = 0 :
