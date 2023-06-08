@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/Text.dart';
+import 'package:learn_flutter/RandomWordStory.dart';
 import 'Components/NeumorphismIcon.dart';
 import 'Home.dart';
 
@@ -44,7 +44,11 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
         ),
         body: [
           const Home(),
-          Test(),
+          // Test(),
+          Container(
+            color: Colors.amber,
+            child: const Center(child: Text('profile')),
+          ),
           Container(
             color: Colors.amber,
             child: const Center(child: Text('profile')),
