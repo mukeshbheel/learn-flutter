@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:learn_flutter/Controller/Auth_controller.dart';
 import 'package:word_generator/word_generator.dart';
 
 import '../Components/GradientText.dart';
@@ -67,8 +68,15 @@ class HomeController extends GetxController{
         return;
       }
 
+      String uuid = await AuthController.instance.getCurretUId();
+      debugPrint('uuid : $uuid');
+      if(uuid.isEmpty){
+        return;
+      }
+
       myStories
           .add({
+        'uuid' : uuid,
         'title': newTitle.text, // John Doe
         'image': newImage.text, // Stokes and Sons
         'story': newStory.text, //
@@ -149,7 +157,6 @@ class HomeController extends GetxController{
   }
 
   Future<void> deleteStory(story,) async{
-
     showDialog(
       context: Get.context!,
       builder: (BuildContext context) {
@@ -191,9 +198,6 @@ class HomeController extends GetxController{
         );
       },
     );
-
-
-
   }
 
   Future pickImageGallery() async {
@@ -269,7 +273,7 @@ class HomeController extends GetxController{
       case 2:
         return 'Looking at my stories...';
       default:
-        return 'Choose one of the options';
+        return 'All Stories';
     }
   }
 

@@ -1,20 +1,15 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:learn_flutter/Components/GradientText.dart';
 import 'package:learn_flutter/Components/NeumorphismContainer.dart';
 import 'package:learn_flutter/Controller/Home_controller.dart';
 import 'package:learn_flutter/RandomWordStory.dart';
 import 'package:learn_flutter/Utils/Constant.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:learn_flutter/Utils/Global.dart';
-
 import 'Components/ResponsiveText.dart';
+import 'Controller/Auth_controller.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -26,6 +21,16 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   final controller = Get.put(HomeController());
+  final authController = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SchedulerBinding.instance.scheduleFrameCallback((timeStamp) {
+      controller.selectedTab.value = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,23 @@ class _HomeState extends State<Home> {
                       ),
 
                       //-------------------------------section 2---------------------------
+
+                      if(!AuthController.instance.isLoggedIn())
+                      Column(
+                        children: [
+                          const SizedBox(height: 50,),
+                          NeumorphismContainer(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+                              child: GradientText('You need to Login to create your own stories.', gradient: controller.getGradient(), style: const TextStyle(fontWeight: FontWeight.w600, ),),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      if(AuthController.instance.isLoggedIn())
                       const SizedBox(height: 50,),
+                      if(AuthController.instance.isLoggedIn())
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 18.0),
                         child: Row(
@@ -95,7 +116,7 @@ class _HomeState extends State<Home> {
 
                                             const SizedBox(height: 15,),
                                             GradientText(
-                                              controller.selectedTab == 1 ? 'Go back' : 'New Story',
+                                              controller.selectedTab == 1 ? 'All Stories' : 'New Story',
                                               style: const TextStyle(
                                                   color: Colors.blue,
                                                   fontSize: 16,
@@ -132,7 +153,7 @@ class _HomeState extends State<Home> {
                                             const Icon(Icons.museum, color: Colors.green, size: 30,),
                                             const SizedBox(height: 15,),
                                             GradientText(
-                                              controller.selectedTab == 2 ? 'Go back' : 'Your Stories',
+                                              controller.selectedTab == 2 ? 'All Stories' : 'Your Stories',
                                               style: const TextStyle(
                                                   color: Colors.green,
                                                   fontSize: 16,
@@ -154,7 +175,9 @@ class _HomeState extends State<Home> {
 
 
                       //-------------------------------section 3--------------------------
+                      if(AuthController.instance.isLoggedIn())
                       const SizedBox(height: 50,),
+                      if(AuthController.instance.isLoggedIn())
                       NeumorphismContainer(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
@@ -467,6 +490,7 @@ class _HomeState extends State<Home> {
                         ),
 
 
+                      //---------------------------------------- my stories------------------>
                       if(controller.selectedTab.value == 2 && controller.selectedStory.isEmpty)
                         Column(
                           children: [
@@ -480,57 +504,120 @@ class _HomeState extends State<Home> {
                                     GradientText('Loading ... ', gradient: greenGradient)
                                         : Column(
                                       children: [
-                                        ...List.generate(
-                                            snapshot.data!.docs.length, (index) =>
-                                            InkWell(
-                                              onTap: (){
-                                                debugPrint(snapshot.data!.docs[index].data.toString());
-                                                controller.selectStory(snapshot.data!.docs[index]);
-                                              },
-                                              child: Column(
-                                                children: [
-                                                  NeumorphismContainer(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical:  10),
-                                                      child: ListTile(
-                                                        title: GradientText(
-                                                          snapshot.data!.docs[index]['title'],
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily: kFontFamily,
-                                                            fontSize: 15,
-                                                            fontWeight: FontWeight.w500
-                                                          ),
-                                                          gradient: greenGradient,
-                                                        ),
-                                                        subtitle: GradientText(
-                                                          snapshot.data!.docs[index]['type'] == 1 ? 'Normal story' : 'Story with Random words',
-                                                          style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontFamily: kFontFamily,
-                                                          ),
-                                                          gradient: greyGradient,
-                                                        ),
-                                                        leading: Container( width: 70, height: 100, child:
-                                                        ClipRRect(
-                                                            borderRadius: BorderRadius.circular(12),
-                                                            child: Image.network(snapshot.data!.docs[index]['image'], fit: BoxFit.cover,))),
+                                        ...snapshot.data!.docs
+                                            .where((data) => data['uuid'] == authController.uuid.value)
+                                            .map((data) => InkWell(
+                                          onTap: (){
+                                            // debugPrint(snapshot.data!.docs[index].data.toString());
+                                            controller.selectStory(data);
+                                          },
+                                          child: Column(
+                                            children: [
+                                              NeumorphismContainer(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical:  10),
+                                                  child: ListTile(
+                                                    title: GradientText(
+                                                      data['title'],
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontFamily: kFontFamily,
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.w500
                                                       ),
+                                                      gradient: greenGradient,
                                                     ),
+                                                    subtitle: GradientText(
+                                                      data['type'] == 1 ? 'Normal story' : 'Story with Random words',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontFamily: kFontFamily,
+                                                      ),
+                                                      gradient: greyGradient,
+                                                    ),
+                                                    leading: Container( width: 70, height: 100, child:
+                                                    ClipRRect(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                        child: Image.network(data['image'], fit: BoxFit.cover,))),
                                                   ),
-                                                  const SizedBox(height: 20,),
-                                                ],
+                                                ),
                                               ),
-                                            )
-                                        ),
+                                              const SizedBox(height: 20,),
+                                            ],
+                                          ),
+                                        )
+                                        ).toList(),
+                                        // ...List.generate(
+                                        //     snapshot.data!.docs.where((element) {
+                                        //        return element['uuid'] == authController.uuid.value;
+                                        //     }).length, (index) =>
+                                        //     InkWell(
+                                        //       onTap: (){
+                                        //         debugPrint(snapshot.data!.docs[index].data.toString());
+                                        //         controller.selectStory(snapshot.data!.docs[index]);
+                                        //       },
+                                        //       child: Column(
+                                        //         children: [
+                                        //           NeumorphismContainer(
+                                        //             child: Padding(
+                                        //               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical:  10),
+                                        //               child: ListTile(
+                                        //                 title: GradientText(
+                                        //                   snapshot.data!.docs[index]['title'],
+                                        //                   style: TextStyle(
+                                        //                     color: Colors.black,
+                                        //                     fontFamily: kFontFamily,
+                                        //                     fontSize: 15,
+                                        //                     fontWeight: FontWeight.w500
+                                        //                   ),
+                                        //                   gradient: greenGradient,
+                                        //                 ),
+                                        //                 subtitle: GradientText(
+                                        //                   snapshot.data!.docs[index]['type'] == 1 ? 'Normal story' : 'Story with Random words',
+                                        //                   style: TextStyle(
+                                        //                       color: Colors.black,
+                                        //                       fontFamily: kFontFamily,
+                                        //                   ),
+                                        //                   gradient: greyGradient,
+                                        //                 ),
+                                        //                 leading: Container( width: 70, height: 100, child:
+                                        //                 ClipRRect(
+                                        //                     borderRadius: BorderRadius.circular(12),
+                                        //                     child: Image.network(snapshot.data!.docs[index]['image'], fit: BoxFit.cover,))),
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //           const SizedBox(height: 20,),
+                                        //         ],
+                                        //       ),
+                                        //     )
+                                        // ),
                                         // ResponsiveText('chintu'),
                                       ],
                                     )
                                 ),
                               ),
                             ),
+                            if(snapshot.data!.docs.where((element) {
+                              return element['uuid'] == AuthController.instance.getCurretUId();
+                            }).isEmpty)
+                              NeumorphismContainer(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(child: GradientText('You do not have any stories yet. Tab New story to start writing.', gradient: greyGradient)),
+                                      SizedBox(width: 10,),
+                                      Icon(Icons.tag_faces_outlined, color: Colors.pink,)
+                                    ],
+                                  ),
+                                ),
+                              )
                           ],
                         ),
+
+                      //------------------------------------------------ my stories details section----------------------------->
 
                       if(controller.selectedTab == 2  && controller.selectedStory.isNotEmpty)
                         Column(
@@ -585,49 +672,55 @@ class _HomeState extends State<Home> {
                                                   },
                                                 ),
 
-                                              const SizedBox(height: 20,),
-                                              Row(
+                                              Text('uuid : ${AuthController.instance.getCurretUId()}'),
+                                              Text('story uuid : ${controller.selectedStory['uuid']}'),
+                                              Column(
                                                 children: [
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: (){
-                                                        controller.editing();
-                                                      },
-                                                      child: NeumorphismContainer(
-                                                        width: 200,
-                                                        // height: 100,
-                                                        child: Center(
-                                                          child: Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                                                            child: GradientText(
-                                                              'Edit',
-                                                              gradient: greenGradient,
+                                                  const SizedBox(height: 20,),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: InkWell(
+                                                          onTap: (){
+                                                            controller.editing();
+                                                          },
+                                                          child: NeumorphismContainer(
+                                                            width: 200,
+                                                            // height: 100,
+                                                            child: Center(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                                child: GradientText(
+                                                                  'Edit',
+                                                                  gradient: greenGradient,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 20,),
-                                                  Expanded(
-                                                    child: InkWell(
-                                                      onTap: () async{
-                                                        controller.deleteStory(controller.selectedStory);
-                                                      },
-                                                      child: NeumorphismContainer(
-                                                        width: 200,
-                                                        // height: 100,
-                                                        child: Center(
-                                                          child: Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                                                            child: GradientText(
-                                                              'Delete',
-                                                              gradient: redGradient,
+                                                      const SizedBox(width: 20,),
+                                                      Expanded(
+                                                        child: InkWell(
+                                                          onTap: () async{
+                                                            controller.deleteStory(controller.selectedStory);
+                                                          },
+                                                          child: NeumorphismContainer(
+                                                            width: 200,
+                                                            // height: 100,
+                                                            child: Center(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                                child: GradientText(
+                                                                  'Delete',
+                                                                  gradient: redGradient,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
@@ -656,6 +749,200 @@ class _HomeState extends State<Home> {
 
 
                       const SizedBox(height: 20,),
+
+                      if(controller.selectedTab.value == 0 && controller.selectedStory.isEmpty)
+                        Column(
+                          children: [
+                            const SizedBox(height: 20,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Container(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+                                    child: !snapshot.hasData ?
+                                    GradientText('Loading ... ', gradient: greenGradient)
+                                        : Column(
+                                      children: [
+                                        ...List.generate(
+                                            snapshot.data!.docs.length, (index) =>
+                                            InkWell(
+                                              onTap: (){
+                                                debugPrint(snapshot.data!.docs[index].data.toString());
+                                                controller.selectStory(snapshot.data!.docs[index]);
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  NeumorphismContainer(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical:  10),
+                                                      child: ListTile(
+                                                        title: GradientText(
+                                                          snapshot.data!.docs[index]['title'],
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontFamily: kFontFamily,
+                                                              fontSize: 15,
+                                                              fontWeight: FontWeight.w500
+                                                          ),
+                                                          gradient: greenGradient,
+                                                        ),
+                                                        subtitle: GradientText(
+                                                          snapshot.data!.docs[index]['type'] == 1 ? 'Normal story' : 'Story with Random words',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily: kFontFamily,
+                                                          ),
+                                                          gradient: greyGradient,
+                                                        ),
+                                                        leading: Container( width: 70, height: 100, child:
+                                                        ClipRRect(
+                                                            borderRadius: BorderRadius.circular(12),
+                                                            child: Image.network(snapshot.data!.docs[index]['image'], fit: BoxFit.cover,))),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 20,),
+                                                ],
+                                              ),
+                                            )
+                                        ),
+                                        // ResponsiveText('chintu'),
+                                      ],
+                                    )
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                      if(controller.selectedTab == 0  && controller.selectedStory.isNotEmpty)
+                        Column(
+                          children: [
+                            Stack(
+                              children: [
+                                Column(
+                                  children: [
+                                    const SizedBox(height: 20,),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: NeumorphismContainer(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical:  10),
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(height: 20,),
+                                              SizedBox(
+                                                width: double.infinity*0.5,
+                                                // height: 100,
+                                                child: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(controller.selectedStory['image'], fit: BoxFit.cover,)),
+                                              ),
+                                              const SizedBox(height: 20,),
+                                              GradientText(controller.selectedStory['title'], gradient: greenGradient, style: TextStyle(
+                                                fontFamily: kFontFamily,
+                                                color: Colors.black87,
+                                                letterSpacing: 1,
+                                                wordSpacing: 3,
+                                                height: 2,
+                                              ),),
+                                              const SizedBox(height: 20,),
+                                              if(controller.selectedStory['type'] == 1)
+                                                ResponsiveText(controller.selectedStory['story'], style: TextStyle(
+                                                  fontFamily: kFontFamily,
+                                                  color: Colors.black87,
+                                                  letterSpacing: 1,
+                                                  wordSpacing: 3,
+                                                  height: 2,
+                                                ),),
+                                              if(controller.selectedStory['type'] == 2)
+                                                Html(
+                                                  data: controller.selectedStory['story'],
+                                                  style: {
+                                                    // p tag with text_size
+                                                    "body": Style(
+                                                        fontSize: const FontSize(14),
+                                                        fontFamily: kFontFamily,
+                                                        letterSpacing: 1,
+                                                        wordSpacing: 3,
+                                                        lineHeight: const LineHeight(2)
+                                                    ),
+                                                  },
+                                                ),
+
+                                              // Text('uuid : ${AuthController.instance.getCurretUId()}'),
+                                              // Text('story uuid : ${controller.selectedStory['uuid']}'),
+                                              if(AuthController.instance.isLoggedIn() && controller.selectedStory['uuid'] == AuthController.instance.getCurretUId())
+                                              Column(
+                                                children: [
+                                                  const SizedBox(height: 20,),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: InkWell(
+                                                          onTap: (){
+                                                            controller.editing();
+                                                          },
+                                                          child: NeumorphismContainer(
+                                                            width: 200,
+                                                            // height: 100,
+                                                            child: Center(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                                child: GradientText(
+                                                                  'Edit',
+                                                                  gradient: greenGradient,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 20,),
+                                                      Expanded(
+                                                        child: InkWell(
+                                                          onTap: () async{
+                                                            controller.deleteStory(controller.selectedStory);
+                                                          },
+                                                          child: NeumorphismContainer(
+                                                            width: 200,
+                                                            // height: 100,
+                                                            child: Center(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                                                child: GradientText(
+                                                                  'Delete',
+                                                                  gradient: redGradient,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10,),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Positioned(
+                                  right: 20,
+                                  top: 30,
+                                  child: NeumorphismContainer(
+                                    borderRadius: 60,
+                                    child: IconButton(onPressed: (){
+                                      controller.selectStory(null);
+                                    }, icon: const Icon(Icons.reply), color: Colors.green,),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
 
                     ],
                   ),

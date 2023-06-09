@@ -6,6 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../Components/GradientText.dart';
 import 'Constant.dart';
+import 'package:get/get.dart';
+
 
 showSnackbar(context, message, { String type = 'error'}){
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
