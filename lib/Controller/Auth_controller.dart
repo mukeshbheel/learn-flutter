@@ -38,9 +38,9 @@ class AuthController extends GetxController{
     }
   }
 
-  void register(String email, String password, String confirmPassword) async{
+  void register(String email, String password, String confirmPassword, String name) async{
 
-    if(password.isEmpty || confirmPassword.isEmpty || email.isEmpty){
+    if(password.isEmpty || confirmPassword.isEmpty || email.isEmpty || name.isEmpty){
       showSnackbar(Get.context, 'All Fields are required');
       return;
     }
@@ -51,7 +51,11 @@ class AuthController extends GetxController{
     }
 
     try{
-      await auth.createUserWithEmailAndPassword(email: email, password: password);
+
+      var result  = await auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+        // UserUpdateInfo updateInfo = UserUpdateInfo();
+        updateProfile(updateType: 'name', value: name);
+      });
     }on Exception catch(e){
       showSnackbar(Get.context , e.toString());
     }catch(e){
@@ -82,6 +86,44 @@ class AuthController extends GetxController{
       showSnackbar(Get.context , e.toString());
     }catch(e){
       showSnackbar(Get.context , e.toString());
+    }
+  }
+
+  void updateProfile({required String updateType, required value }) async{
+
+    switch(updateType){
+      case 'name' :
+        try{
+        auth.currentUser!.updateDisplayName(value);
+    }on Exception catch(e){
+      showSnackbar(Get.context , e.toString());
+    }catch(e){
+      showSnackbar(Get.context , e.toString());
+    }
+        break;
+
+      case 'image' :
+        try{
+        auth.currentUser!.updateDisplayName(value);
+    }on Exception catch(e){
+      showSnackbar(Get.context , e.toString());
+    }catch(e){
+      showSnackbar(Get.context , e.toString());
+    }
+        break;
+
+      case 'phone' :
+        try{
+        auth.currentUser!.updateDisplayName(value);
+    }on Exception catch(e){
+      showSnackbar(Get.context , e.toString());
+    }catch(e){
+      showSnackbar(Get.context , e.toString());
+    }
+        break;
+
+      default :
+        return;
     }
   }
 

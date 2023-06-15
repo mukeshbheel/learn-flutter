@@ -34,8 +34,8 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
                 selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.animation, color: Colors.blue,),)),
                   icon: Center(child: NeumorphismIcon( child: const Icon(Icons.animation),)), label: ''),
               NavigationDestination(
-                  selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.other_houses, color: Colors.blue,),)),
-                  icon: Center(child: NeumorphismIcon( child: const Icon(Icons.other_houses),)), label: ''),
+                  selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.person, color: Colors.blue,),)),
+                  icon: Center(child: NeumorphismIcon( child: const Icon(Icons.person),)), label: ''),
             ],
             selectedIndex: _currentIndex,
             onDestinationSelected: ((int index) => setState(() {

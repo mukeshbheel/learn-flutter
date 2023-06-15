@@ -86,6 +86,7 @@ class HomeController extends GetxController {
         'type': selectedType.value, // 42
       }).then((value) {
         print("Story Saved");
+        Get.back();
         showSnackbar(context, 'Story saved successfully.', type: 'success');
         selectedTab.value = 2;
         newTitle.text = '';
@@ -95,6 +96,7 @@ class HomeController extends GetxController {
         file.value = File('');
         selectedType.value = 0;
         newLine.text = '';
+        randomWord.value = '';
       }).catchError((error) => showSnackbar(
             Get.context,
             'Failed to save story: $error',
@@ -135,11 +137,13 @@ class HomeController extends GetxController {
         print('Success');
         showSnackbar(context, 'Story updated successfully.', type: 'success');
         var updatedStory = (await getSingleStory(selectedStoryId.value)).data();
+        Get.back();
         isEditing.value = false;
         selectedTab.value = 2;
         selectedType.value = 0;
         selectedStory.value = updatedStory;
         file.value = File('');
+        randomWord.value = '';
       }).catchError((error) => showSnackbar(
                 context,
                 'Failed to update story: $error',
@@ -205,8 +209,9 @@ class HomeController extends GetxController {
                           .runTransaction((Transaction myTransaction) async {
                         await myTransaction.delete(storyFirebaseDoc.reference);
                       });
-                      selectedStory.value = {};
+                      // selectedStory.value = {};
                       Navigator.pop(context);
+                      Get.back();
                     },
                   ),
                 ),
@@ -277,6 +282,20 @@ class HomeController extends GetxController {
     selectedType.value = 0;
     story.value = '';
     newLine.text = '';
+    randomWord.value = '';
+  }
+
+  reset() {
+    selectedStory.value = {};
+    isEditing.value = false;
+    newStory.text = '';
+    newImage.text = '';
+    newTitle.text = '';
+    selectedType.value = 0;
+    story.value = '';
+    newLine.text = '';
+    randomWord.value = '';
+    file.value = File('');
   }
 
   selectType(type) {
@@ -307,8 +326,8 @@ class HomeController extends GetxController {
 
   getTitle() {
     switch (selectedTab.value) {
-      case 1:
-        return isEditing.value ? 'Editing the Story...' : 'Writing a Story...';
+      // case 1:
+      //   return isEditing.value ? 'Editing the Story...' : 'Writing a Story...';
       case 2:
         return 'Looking at my stories...';
       default:
@@ -328,6 +347,8 @@ class HomeController extends GetxController {
   }
 
   editing() {
+    randomWord.value = '';
+    newLine.text = '';
     newTitle.text = selectedStory['title'];
     newImage.text = selectedStory['image'];
     newStory.text = selectedStory['story'];

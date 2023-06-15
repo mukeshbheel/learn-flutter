@@ -18,7 +18,7 @@ class NeumorphismIcon extends StatelessWidget {
           borderRadius: BorderRadius.circular(60),
           boxShadow: [
             BoxShadow(
-              color: Color(0xFFBEBEBE),
+              color: Colors.grey.shade500,
               offset: Offset(10,10),
               blurRadius: 20,
               spreadRadius: 1,

@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
 
   int selectedTab = 0;
   TextEditingController email = TextEditingController();
+  TextEditingController name = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
 
@@ -104,6 +105,11 @@ class _LoginState extends State<Login> {
                 ],
               ),
 
+              if(selectedTab == 1)
+              const SizedBox(height: 30,),
+              if(selectedTab == 1)
+              AuthComponent(controller: name, text: 'Name',),
+
               const SizedBox(height: 30,),
               AuthComponent(controller: email, text: 'Email',),
 
@@ -121,7 +127,7 @@ class _LoginState extends State<Login> {
                   child: GestureDetector(
                     onTap: (){
                       if(selectedTab == 1){
-                        AuthController.instance.register(email.text.trim(), password.text.trim(), confirmPassword.text.trim());
+                        AuthController.instance.register(email.text.trim(), password.text.trim(), confirmPassword.text.trim(), name.text.trim());
                       }else{
                         AuthController.instance.login(email.text.trim(), password.text.trim());
                       }
