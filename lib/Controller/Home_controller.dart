@@ -10,6 +10,7 @@ import 'package:learn_flutter/Controller/Auth_controller.dart';
 import 'package:word_generator/word_generator.dart';
 
 import '../Components/GradientText.dart';
+import '../Components/LoaderButton.dart';
 import '../Components/NeumorphismContainer.dart';
 import '../Utils/Constant.dart';
 import '../Utils/Global.dart';
@@ -164,6 +165,7 @@ class HomeController extends GetxController {
     }
   }
 
+
   Future<void> deleteStory(story, context) async {
     showDialog(
       context: context,
@@ -195,7 +197,9 @@ class HomeController extends GetxController {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                   ),
-                  child: TextButton(
+                  child: isLoading.value ?
+                  LoaderButton():
+                  TextButton(
                     child: GradientText(
                       "Yes",
                       style: TextStyle(
@@ -205,10 +209,12 @@ class HomeController extends GetxController {
                       gradient: redGradient,
                     ),
                     onPressed: () async {
+                      isLoading.value = true;
                       await FirebaseFirestore.instance
                           .runTransaction((Transaction myTransaction) async {
                         await myTransaction.delete(storyFirebaseDoc.reference);
                       });
+                      isLoading.value = false;
                       // selectedStory.value = {};
                       Navigator.pop(context);
                       Get.back();

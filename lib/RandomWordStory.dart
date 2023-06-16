@@ -15,6 +15,7 @@ import 'package:flutter_html/html_parser.dart';
 import './Utils/Global.dart';
 
 import 'Components/GradientText.dart';
+import 'Components/LoaderButton.dart';
 import 'Components/NeumorphismContainer.dart';
 import 'Controller/Home_controller.dart';
 import 'Utils/Constant.dart';
@@ -245,8 +246,8 @@ class _RandomWordStoryState extends State<RandomWordStory> {
                                 child: Center(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 15.0),
-                                    child: GradientText(
-                                      homeController.isLoading.value ? 'Please wait ...' : 'Save',
+                                    child: homeController.isLoading.value ? LoaderButton() : GradientText(
+                                      'Save',
                                       gradient: homeController.story.isNotEmpty ? blueGradient : greyGradient,
                                     ),
                                   ),

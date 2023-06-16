@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/Controller/Auth_controller.dart';
+import 'package:learn_flutter/Login.dart';
 import 'package:learn_flutter/Profile.dart';
 import 'package:learn_flutter/RandomWordStory.dart';
 import 'Components/NeumorphismIcon.dart';
@@ -54,7 +56,8 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
             color: Colors.amber,
             child: const Center(child: Text('profile')),
           ),
-          Profile(),
+          AuthController.instance.isLoggedIn()?
+          Profile() : Login(),
         ][_currentIndex],
       ),
     );

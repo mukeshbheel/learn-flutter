@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Components/GradientText.dart';
+import 'Components/LoaderButton.dart';
 import 'Components/NeumorphismContainer.dart';
 import 'Controller/Auth_controller.dart';
 import 'Controller/Home_controller.dart';
@@ -340,9 +341,10 @@ class _NewStoryState extends State<NewStory> {
                                                       .all(
                                                       8.0),
                                                   child: Center(
-                                                    child:
+                                                    child: controller.isLoading.value ?
+                                                        LoaderButton() :
                                                     GradientText(
-                                                      controller.isLoading.value ? 'Please wait...' : (controller.isEditing.value ? 'Update' : 'Save it now'),
+                                                      controller.isEditing.value ? 'Update' : 'Save it now',
                                                       gradient:
                                                       const LinearGradient(
                                                           colors: [

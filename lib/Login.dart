@@ -4,6 +4,7 @@ import 'package:learn_flutter/NavigationBar_example.dart';
 
 import 'Components/AuthComponent.dart';
 import 'Components/GradientText.dart';
+import 'Components/LoaderButton.dart';
 import 'Components/NeumorphismContainer.dart';
 import 'Utils/Constant.dart';
 import 'package:get/get.dart';
@@ -122,7 +123,7 @@ class _LoginState extends State<Login> {
               AuthComponent(controller: confirmPassword, text: 'ConfirmPassword', obscureText: true,),
 
               const SizedBox(height: 40,),
-              SizedBox(
+              Obx(() => SizedBox(
                 child: NeumorphismContainer(
                   child: GestureDetector(
                     onTap: (){
@@ -134,11 +135,12 @@ class _LoginState extends State<Login> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                      child: GradientText( selectedTab == 0 ? 'Login':'Register', gradient: pinkGradient,),
+                      child:   AuthController.instance.loading.value ? LoaderButton()
+                          : GradientText( selectedTab == 0 ? 'Login':'Register', gradient: pinkGradient,),
                     ),
                   ),
                 ),
-              ),
+              )),
 
               const SizedBox(height: 40,),
               SizedBox(
@@ -154,12 +156,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40,),
-
-
-
-
             ],
           ),
         ),
