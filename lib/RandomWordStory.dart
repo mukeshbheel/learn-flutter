@@ -11,7 +11,7 @@ import 'package:learn_flutter/Components/ResponsiveText.dart';
 import 'package:learn_flutter/Utils/Global.dart';
 import 'package:word_generator/word_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_html/html_parser.dart';
+// import 'package:flutter_html/html_parser.dart';
 import './Utils/Global.dart';
 
 import 'Components/GradientText.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
+// import 'package:flutter_html/style.dart';
 import 'package:get/get.dart';
 import 'package:learn_flutter/NewStory.dart';
 import 'Components/GradientText.dart';
@@ -118,7 +118,7 @@ class _StoryDetailsState extends State<StoryDetails> {
                                         // p tag with text_size
                                         "body": Style(
                                             fontSize:
-                                            const FontSize(
+                                            FontSize(
                                                 14),
                                             fontFamily:
                                             kFontFamily,

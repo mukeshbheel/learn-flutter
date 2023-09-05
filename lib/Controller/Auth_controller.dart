@@ -89,6 +89,7 @@ class AuthController extends GetxController{
     try{
       loading.value = true;
      await auth.signInWithEmailAndPassword(email: email, password: password);
+      Get.to(()=>const NavigationBarExample());
       loading.value = false;
     }on Exception catch(e){
       loading.value = false;
