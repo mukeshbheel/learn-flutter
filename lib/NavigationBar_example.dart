@@ -3,6 +3,8 @@ import 'package:learn_flutter/Controller/Auth_controller.dart';
 import 'package:learn_flutter/Login.dart';
 import 'package:learn_flutter/Profile.dart';
 import 'package:learn_flutter/RandomWordStory.dart';
+import 'package:learn_flutter/Setting.dart';
+import 'package:learn_flutter/Utils/Constant.dart';
 import 'Components/NeumorphismIcon.dart';
 import 'Home.dart';
 
@@ -19,25 +21,29 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: greyBackground,
         bottomNavigationBar: Container(
         color: Colors.transparent,
-          height: 70,
+          // height: 70,
           child: NavigationBar(
+            height: 50,
             backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            indicatorColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
             destinations:  [
               NavigationDestination(
-                  selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.home, color: Colors.blue,),)),
-                  icon: Center(child: NeumorphismIcon( child: const Icon(Icons.home),),), label: ''),
+                  selectedIcon: Center(child: NeumorphismIcon( width: selectedIconSizeNavBarWidth, hight: selectedIconSizeNavBarHeight, child: const Icon(Icons.home, color: Colors.blue,),)),
+                  icon: Center(child: NeumorphismIcon(width: notSelectedIconSizeNavBarWidth, hight: notSelectedIconSizeNavBarHeight, child: const Icon(Icons.home, size: 15,),),), label: ''),
               NavigationDestination(
-                  selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.settings, color: Colors.blue,),)),
-                  icon: Center(child: NeumorphismIcon( child: const Icon(Icons.settings),)), label: ''),
+                  selectedIcon: Center(child: NeumorphismIcon(width: selectedIconSizeNavBarWidth, hight: selectedIconSizeNavBarHeight, child: const Icon(Icons.settings, color: Colors.blue,),)),
+                  icon: Center(child: NeumorphismIcon(width: notSelectedIconSizeNavBarWidth, hight: notSelectedIconSizeNavBarHeight, child: const Icon(Icons.settings, size: 15),)), label: ''),
               NavigationDestination(
-                selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.animation, color: Colors.blue,),)),
-                  icon: Center(child: NeumorphismIcon( child: const Icon(Icons.animation),)), label: ''),
+                selectedIcon: Center(child: NeumorphismIcon(width: selectedIconSizeNavBarWidth, hight: selectedIconSizeNavBarHeight, child: const Icon(Icons.animation, color: Colors.blue,),)),
+                  icon: Center(child: NeumorphismIcon(width: notSelectedIconSizeNavBarWidth, hight: notSelectedIconSizeNavBarHeight, child: const Icon(Icons.animation, size: 15),)), label: ''),
               NavigationDestination(
-                  selectedIcon: Center(child: NeumorphismIcon( child: const Icon(Icons.person, color: Colors.blue,),)),
-                  icon: Center(child: NeumorphismIcon( child: const Icon(Icons.person),)), label: ''),
+                  selectedIcon: Center(child: NeumorphismIcon( width: selectedIconSizeNavBarWidth, hight: selectedIconSizeNavBarHeight, child: const Icon(Icons.person, color: Colors.blue,),)),
+                  icon: Center(child: NeumorphismIcon(width: notSelectedIconSizeNavBarWidth, hight: notSelectedIconSizeNavBarHeight, child: const Icon(Icons.person, size: 15),)), label: ''),
             ],
             selectedIndex: _currentIndex,
             onDestinationSelected: ((int index) => setState(() {
@@ -48,10 +54,8 @@ class _NavigationBarExampleState extends State<NavigationBarExample> {
         body: [
           const Home(),
           // Test(),
-          Container(
-            color: Colors.amber,
-            child: const Center(child: Text('profile')),
-          ),
+          AuthController.instance.isLoggedIn()?
+          Settings() : Login(),
           Container(
             color: Colors.amber,
             child: const Center(child: Text('profile')),

@@ -10,3 +10,12 @@ LinearGradient blueGradient = const LinearGradient(colors: [Colors.blue, Colors.
 LinearGradient pinkGradient = const LinearGradient(colors: [Colors.pink, Colors.black]);
 LinearGradient redGradient = const LinearGradient(colors: [Colors.red, Colors.black]);
 LinearGradient greyGradient = const LinearGradient(colors: [Colors.grey, Colors.black]);
+
+double selectedIconSizeNavBarWidth = 30;
+double selectedIconSizeNavBarHeight = 30;
+
+double notSelectedIconSizeNavBarWidth = 30;
+double notSelectedIconSizeNavBarHeight = 30;
+
+Color? greyBackground = Colors.grey[200];
+Color greyShadowColor = Colors.grey.shade400;

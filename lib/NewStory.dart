@@ -25,7 +25,7 @@ class _NewStoryState extends State<NewStory> {
       init: controller,
       builder: (_) {
         return Obx(() => Scaffold(
-          backgroundColor: Colors.grey[300],
+          backgroundColor: greyBackground,
           body: SingleChildScrollView(
             child: Column(
               children: [

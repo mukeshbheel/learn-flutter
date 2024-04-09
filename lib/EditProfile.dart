@@ -28,7 +28,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: greyBackground,
       body: SingleChildScrollView(
         child: Column(
           children: [

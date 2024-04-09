@@ -39,12 +39,12 @@ class _HomeState extends State<Home> {
               builder: (context, snapshot) {
                 return Obx(() => SingleChildScrollView(
                       child: Container(
-                        color: Colors.grey[300],
+                        color: Colors.grey[200],
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Column(
                           children: [
                             const SizedBox(
-                              height: 80,
+                              height: 40,
                             ),
                             Center(
                               child: NeumorphismContainer(
@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
                               Column(
                                 children: [
                                   const SizedBox(
-                                    height: 50,
+                                    height: 20,
                                   ),
                                   NeumorphismContainer(
                                     child: Padding(
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
 
                             if (AuthController.instance.isLoggedIn())
                               const SizedBox(
-                                height: 50,
+                                height: 20,
                               ),
                             if (AuthController.instance.isLoggedIn())
                               Padding(
@@ -208,7 +208,7 @@ class _HomeState extends State<Home> {
                             //-------------------------------section 3--------------------------
                             // if (AuthController.instance.isLoggedIn())
                               const SizedBox(
-                                height: 50,
+                                height: 30,
                               ),
                             // if (AuthController.instance.isLoggedIn())
                               NeumorphismContainer(
@@ -353,9 +353,9 @@ class _HomeState extends State<Home> {
                             if (controller.selectedTab.value != 2)
                               Column(
                                 children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
+                                  // const SizedBox(
+                                  //   height: 20,
+                                  // ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),

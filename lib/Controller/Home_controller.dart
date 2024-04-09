@@ -174,7 +174,7 @@ class HomeController extends GetxController {
           child: AlertDialog(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            backgroundColor: Colors.grey[300],
+            backgroundColor: greyBackground,
             title: GradientText(
               "Deleting this story...",
               style: TextStyle(
