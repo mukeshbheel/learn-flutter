@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ResponsiveText extends StatelessWidget {
-  ResponsiveText(this.text,{
+  ResponsiveText(
+    this.text, {
     Key? key,
     this.style,
   }) : super(key: key);
@@ -11,10 +12,7 @@ class ResponsiveText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
-      text: TextSpan(
-          text: text,
-          style: style
-      ),
+      text: TextSpan(text: text, style: style),
     );
   }
 }

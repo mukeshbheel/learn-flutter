@@ -11,8 +11,7 @@ import 'package:learn_flutter/NavigationBar_example.dart';
 import '../Login.dart';
 import '../Utils/Global.dart';
 
-class AuthController extends GetxController{
-
+class AuthController extends GetxController {
   static AuthController instance = Get.find<AuthController>();
 
   late Rx<User?> _user;
@@ -21,151 +20,158 @@ class AuthController extends GetxController{
   RxString name = ''.obs;
   RxString imageUrl = ''.obs;
 
-
   RxBool loading = false.obs;
+  RxBool passwordResetLinkSent = false.obs;
+  RxBool passwordResetLinkButtonIsDisabled = false.obs;
 
   @override
-  void onReady(){
-
+  void onReady() {
     super.onReady();
     debugPrint('haalo');
     _user = Rx<User?>(auth.currentUser);
-    
+
     _user.bindStream(auth.userChanges());
 
     ever(_user, _initialScreen);
   }
 
-  _initialScreen(User? user){
+  _initialScreen(User? user) {
     debugPrint('user : $user');
-    if(user == null){
+    if (user == null) {
       uuid.value = '';
-      Get.offAll(() => Login(selectedTab: 0,));
-    }else{
+      Get.offAll(() => Login(
+            selectedTab: 0,
+          ));
+    } else {
       uuid.value = user.uid;
       name.value = user.displayName ?? '';
       imageUrl.value = user.photoURL ?? '';
-      if(Get.isRegistered<HomeController>() == false)
-      Get.offAll(()=>const NavigationBarExample());
+      if (Get.isRegistered<HomeController>() == false)
+        Get.offAll(() => const NavigationBarExample());
     }
   }
 
-  void register(String email, String password, String confirmPassword, String name) async{
-
-    if(password.isEmpty || confirmPassword.isEmpty || email.isEmpty || name.isEmpty){
+  void register(String email, String password, String confirmPassword,
+      String name) async {
+    if (password.isEmpty ||
+        confirmPassword.isEmpty ||
+        email.isEmpty ||
+        name.isEmpty) {
       showSnackbar(Get.context, 'All Fields are required');
       return;
     }
 
-    if(password != confirmPassword){
+    if (password != confirmPassword) {
       showSnackbar(Get.context, 'Password and confirmPassword should be same');
       return;
     }
 
-    try{
-
+    try {
       loading.value = true;
-      var result  = await auth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+      var result = await auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) {
         // UserUpdateInfo updateInfo = UserUpdateInfo();
         updateProfile(updateType: 'name', value: name);
       });
       loading.value = false;
-    }on Exception catch(e){
+    } on Exception catch (e) {
       loading.value = false;
-      showSnackbar(Get.context , e.toString());
-    }catch(e){
+      showSnackbar(Get.context, e.toString());
+    } catch (e) {
       loading.value = false;
-      showSnackbar(Get.context , e.toString());
+      showSnackbar(Get.context, e.toString());
     }
   }
 
-  void login(String email, String password,) async{
-
-    if(password.isEmpty || email.isEmpty){
+  void login(
+    String email,
+    String password,
+  ) async {
+    if (password.isEmpty || email.isEmpty) {
       showSnackbar(Get.context, 'All Fields are required');
       return;
     }
 
-    try{
+    try {
       loading.value = true;
-     await auth.signInWithEmailAndPassword(email: email, password: password);
-      Get.to(()=>const NavigationBarExample());
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      Get.to(() => const NavigationBarExample());
       loading.value = false;
-    }on Exception catch(e){
+    } on Exception catch (e) {
       loading.value = false;
-      showSnackbar(Get.context , e.toString());
-    }catch(e){
+      showSnackbar(Get.context, e.toString());
+    } catch (e) {
       loading.value = false;
-      showSnackbar(Get.context , e.toString());
+      showSnackbar(Get.context, e.toString());
     }
   }
 
-  void logout() async{
-    try{
+  void logout() async {
+    try {
       await auth.signOut();
-    }on Exception catch(e){
-      showSnackbar(Get.context , e.toString());
-    }catch(e){
-      showSnackbar(Get.context , e.toString());
+    } on Exception catch (e) {
+      showSnackbar(Get.context, e.toString());
+    } catch (e) {
+      showSnackbar(Get.context, e.toString());
     }
   }
 
-  void updateProfile({required String updateType, required value }) async{
-
-    switch(updateType){
-      case 'name' :
-        try{
-        auth.currentUser!.updateDisplayName(value);
-    }on Exception catch(e){
-      showSnackbar(Get.context , e.toString());
-    }catch(e){
-      showSnackbar(Get.context , e.toString());
-    }
+  void updateProfile({required String updateType, required value}) async {
+    switch (updateType) {
+      case 'name':
+        try {
+          auth.currentUser!.updateDisplayName(value);
+        } on Exception catch (e) {
+          showSnackbar(Get.context, e.toString());
+        } catch (e) {
+          showSnackbar(Get.context, e.toString());
+        }
         break;
 
-      case 'image' :
-        try{
-        auth.currentUser!.updatePhotoURL(value);
-    }on Exception catch(e){
-      showSnackbar(Get.context , e.toString());
-    }catch(e){
-      showSnackbar(Get.context , e.toString());
-    }
+      case 'image':
+        try {
+          auth.currentUser!.updatePhotoURL(value);
+        } on Exception catch (e) {
+          showSnackbar(Get.context, e.toString());
+        } catch (e) {
+          showSnackbar(Get.context, e.toString());
+        }
         break;
 
-      case 'phone' :
-        try{
-        auth.currentUser!.updatePhoneNumber(value);
-    }on Exception catch(e){
-      showSnackbar(Get.context , e.toString());
-    }catch(e){
-      showSnackbar(Get.context , e.toString());
-    }
+      case 'phone':
+        try {
+          auth.currentUser!.updatePhoneNumber(value);
+        } on Exception catch (e) {
+          showSnackbar(Get.context, e.toString());
+        } catch (e) {
+          showSnackbar(Get.context, e.toString());
+        }
         break;
 
-      default :
+      default:
         return;
     }
   }
 
-  String getCurrentName(){
-    if(auth.currentUser != null){
+  String getCurrentName() {
+    if (auth.currentUser != null) {
       return auth.currentUser!.displayName.toString();
-    }else{
+    } else {
       return 'user name';
     }
   }
 
-  String getCurrentProfilePic(){
-    if(auth.currentUser != null){
+  String getCurrentProfilePic() {
+    if (auth.currentUser != null) {
       return auth.currentUser!.photoURL.toString();
-    }else{
+    } else {
       return '';
     }
   }
 
   getCurretUId() {
-      return uuid.value;
+    return uuid.value;
   }
 
   isLoggedIn() {
@@ -181,28 +187,49 @@ class AuthController extends GetxController{
 
 // Create a reference to 'images/mountains.jpg'
     final mountainImagesRef =
-    storageRef.child("images/${file.path.split('/').last}");
+        storageRef.child("images/${file.path.split('/').last}");
 
     UploadTask uploadTask = mountainImagesRef.putFile(file);
     TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
-
   }
 
-  editProfile({required File file, required String name })async{
+  editProfile({required File file, required String name}) async {
     loading.value = true;
-    if(file.path.isNotEmpty){
+    if (file.path.isNotEmpty) {
       var imageUrl = await uploadProfileImage(file);
       updateProfile(updateType: 'image', value: imageUrl);
     }
 
-    if(name.isNotEmpty){
+    if (name.isNotEmpty) {
       updateProfile(updateType: 'name', value: name);
     }
     loading.value = false;
     Get.back();
   }
 
+  Future forgotPassword({required String email}) async {
+    loading(true);
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      passwordResetLinkButtonIsDisabled.value = true;
+      passwordResetLinkSent.value = true;
+      // Future.delayed(Duration(seconds: 3), (() async {
+      //   passwordResetLinkButtonIsDisabled.value = false;
+      // }));
+      showSnackbar(Get.context,
+          'Password reset link has been sent to your email address',
+          type: 'success');
+    } on FirebaseAuthException catch (e) {
+      showSnackbar(Get.context, e.toString());
+      throw Exception(e.message.toString());
+    } catch (e) {
+      showSnackbar(Get.context, e.toString());
+      throw Exception(e.toString());
+    } finally {
+      loading(false);
+    }
+  }
 
   // Future<bool> isLoggedIn()async{
   //   return _user.value != null;
@@ -239,5 +266,4 @@ class AuthController extends GetxController{
 //    }
 //    });
 //  }
-
 }

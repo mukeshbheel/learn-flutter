@@ -33,6 +33,7 @@ class HomeController extends GetxController {
 
   RxBool isEditing = false.obs;
   RxBool isLoading = false.obs;
+  RxBool showRandomStoryInfo = true.obs;
 
   ImagePicker imagePicker = ImagePicker();
   Rx<File> file = File('').obs;
@@ -47,109 +48,118 @@ class HomeController extends GetxController {
   TextEditingController newStory = TextEditingController();
 
   Future<void> addStory(context) async {
-    isLoading.value = true;
-    // await uploadProfileImage();
-    //
-    //
-    // if(newTitle.text.isEmpty || newStory.text.isEmpty || newImage.text.isEmpty){
-    //   showSnackbar(context, 'Title, Image Link and Story can not be empty.');
-    //   return;
-    // }
-    if (!isEditing.value) {
-      debugPrint('filePath : ${file.value.path}');
+    try {
+      isLoading.value = true;
+      // await uploadProfileImage();
+      //
+      //
+      // if(newTitle.text.isEmpty || newStory.text.isEmpty || newImage.text.isEmpty){
+      //   showSnackbar(context, 'Title, Image Link and Story can not be empty.');
+      //   return;
+      // }
+      if (!isEditing.value) {
+        debugPrint('filePath : ${file.value.path}');
 
-      if (newTitle.text.isEmpty ||
-          file.value.path.isEmpty ||
-          newStory.text.isEmpty) {
-        showSnackbar(context, 'Title, Image Link and Story can not be empty.');
-        isLoading.value = false;
-        return;
-      }
+        if (newTitle.text.isEmpty ||
+            file.value.path.isEmpty ||
+            newStory.text.isEmpty) {
+          showSnackbar(
+              context, 'Title, Image Link and Story can not be empty.');
+          isLoading.value = false;
+          return;
+        }
 
-      await uploadProfileImage();
-      if (newImage.text.isEmpty) {
-        showSnackbar(context, 'Image could not be uploaded.');
-        isLoading.value = false;
-        return;
-      }
-
-      String uuid = await AuthController.instance.getCurretUId();
-      debugPrint('uuid : $uuid');
-      if (uuid.isEmpty) {
-        return;
-      }
-
-      myStories.add({
-        'uuid': uuid,
-        'title': newTitle.text, // John Doe
-        'image': newImage.text, // Stokes and Sons
-        'story': newStory.text, //
-        'type': selectedType.value, // 42
-      }).then((value) {
-        print("Story Saved");
-        Get.back();
-        showSnackbar(context, 'Story saved successfully.', type: 'success');
-        selectedTab.value = 2;
-        newTitle.text = '';
-        newImage.text = '';
-        newStory.text = '';
-        story.value = '';
-        file.value = File('');
-        selectedType.value = 0;
-        newLine.text = '';
-        randomWord.value = '';
-      }).catchError((error) => showSnackbar(
-            Get.context,
-            'Failed to save story: $error',
-          ));
-
-      isLoading.value = false;
-    } else {
-      // // newImage.text = file.path;
-      // file = File(newImage.text);
-
-      if (newTitle.text.isEmpty ||
-          (file.value.path.isEmpty && newImage.text.isEmpty) ||
-          newStory.text.isEmpty) {
-        showSnackbar(context, 'Title, Image Link and Story can not be empty.');
-        isLoading.value = false;
-        return;
-      }
-
-      if (file.value.path.isNotEmpty) {
         await uploadProfileImage();
-      }
-      if (newImage.text.isEmpty) {
-        showSnackbar(context, 'Image could not be uploaded.');
+        if (newImage.text.isEmpty) {
+          showSnackbar(context, 'Image could not be uploaded.');
+          isLoading.value = false;
+          return;
+        }
+
+        String uuid = await AuthController.instance.getCurretUId();
+        debugPrint('uuid : $uuid');
+        if (uuid.isEmpty) {
+          return;
+        }
+
+        myStories.add({
+          'uuid': uuid,
+          'title': newTitle.text, // John Doe
+          'image': newImage.text, // Stokes and Sons
+          'story': newStory.text, //
+          'type': selectedType.value, // 42
+        }).then((value) {
+          print("Story Saved");
+          Get.back();
+          showSnackbar(context, 'Story saved successfully.', type: 'success');
+          selectedTab.value = 2;
+          newTitle.text = '';
+          newImage.text = '';
+          newStory.text = '';
+          story.value = '';
+          file.value = File('');
+          selectedType.value = 0;
+          newLine.text = '';
+          randomWord.value = '';
+        }).catchError((error) => showSnackbar(
+              Get.context,
+              'Failed to save story: $error',
+            ));
+
         isLoading.value = false;
-        return;
+      } else {
+        // // newImage.text = file.path;
+        // file = File(newImage.text);
+
+        if (newTitle.text.isEmpty ||
+            (file.value.path.isEmpty && newImage.text.isEmpty) ||
+            newStory.text.isEmpty) {
+          showSnackbar(
+              context, 'Title, Image Link and Story can not be empty.');
+          isLoading.value = false;
+          return;
+        }
+
+        if (file.value.path.isNotEmpty) {
+          await uploadProfileImage();
+        }
+        if (newImage.text.isEmpty) {
+          showSnackbar(context, 'Image could not be uploaded.');
+          isLoading.value = false;
+          return;
+        }
+
+        var collection = FirebaseFirestore.instance.collection('myStories');
+        print('story id : ${selectedStoryId.value}');
+
+        collection.doc(selectedStoryId.value).update({
+          'title': newTitle.text, // John Doe
+          'image': newImage.text, // Stokes and Sons
+          'story': newStory.text,
+          'type': selectedStory.value['type'], // 42
+        }) // <-- Updated data
+            .then((_) async {
+          print('Success');
+          showSnackbar(context, 'Story updated successfully.', type: 'success');
+          var updatedStory =
+              (await getSingleStory(selectedStoryId.value)).data();
+          Get.back();
+          isEditing.value = false;
+          selectedTab.value = 2;
+          selectedType.value = 0;
+          selectedStory.value = updatedStory;
+          file.value = File('');
+          randomWord.value = '';
+        }).catchError((error) => showSnackbar(
+                  context,
+                  'Failed to update story: $error',
+                ));
+
+        isLoading.value = false;
       }
-
-      var collection = FirebaseFirestore.instance.collection('myStories');
-      print('story id : ${selectedStoryId.value}');
-
-      collection.doc(selectedStoryId.value).update({
-        'title': newTitle.text, // John Doe
-        'image': newImage.text, // Stokes and Sons
-        'story': newStory.text,
-        'type': selectedStory.value['type'], // 42
-      }) // <-- Updated data
-          .then((_) async {
-        print('Success');
-        showSnackbar(context, 'Story updated successfully.', type: 'success');
-        var updatedStory = (await getSingleStory(selectedStoryId.value)).data();
-        Get.back();
-        isEditing.value = false;
-        selectedTab.value = 2;
-        selectedType.value = 0;
-        selectedStory.value = updatedStory;
-        file.value = File('');
-        randomWord.value = '';
-      }).catchError((error) => showSnackbar(
-                context,
-                'Failed to update story: $error',
-              ));
-
+    } catch (e) {
+      showSnackbar(Get.context, e.toString());
+    } finally {
       isLoading.value = false;
     }
   }
@@ -164,7 +174,6 @@ class HomeController extends GetxController {
       // Call setState if needed.
     }
   }
-
 
   Future<void> deleteStory(story, context) async {
     showDialog(
@@ -197,29 +206,30 @@ class HomeController extends GetxController {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                   ),
-                  child: isLoading.value ?
-                  LoaderButton():
-                  TextButton(
-                    child: GradientText(
-                      "Yes",
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: kFontFamily),
-                      gradient: redGradient,
-                    ),
-                    onPressed: () async {
-                      isLoading.value = true;
-                      await FirebaseFirestore.instance
-                          .runTransaction((Transaction myTransaction) async {
-                        await myTransaction.delete(storyFirebaseDoc.reference);
-                      });
-                      isLoading.value = false;
-                      // selectedStory.value = {};
-                      Navigator.pop(context);
-                      Get.back();
-                    },
-                  ),
+                  child: isLoading.value
+                      ? LoaderButton()
+                      : TextButton(
+                          child: GradientText(
+                            "Yes",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: kFontFamily),
+                            gradient: redGradient,
+                          ),
+                          onPressed: () async {
+                            isLoading.value = true;
+                            await FirebaseFirestore.instance.runTransaction(
+                                (Transaction myTransaction) async {
+                              await myTransaction
+                                  .delete(storyFirebaseDoc.reference);
+                            });
+                            isLoading.value = false;
+                            // selectedStory.value = {};
+                            Navigator.pop(context);
+                            Get.back();
+                          },
+                        ),
                 ),
               ),
               NeumorphismContainer(

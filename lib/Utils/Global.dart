@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/Components/NeumorphismContainer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,8 +6,7 @@ import '../Components/GradientText.dart';
 import 'Constant.dart';
 import 'package:get/get.dart';
 
-
-showSnackbar(context, message, { String type = 'error'}){
+showSnackbar(context, message, {String type = 'error'}) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     backgroundColor: Colors.transparent,
     behavior: SnackBarBehavior.floating,
@@ -27,13 +24,21 @@ showSnackbar(context, message, { String type = 'error'}){
           ),
           child: NeumorphismContainer(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
               child: Row(
                 children: [
                   SizedBox(
                     width: 48,
-                    child: type == 'error' ? const Icon(Icons.dangerous, color: Colors.red,)
-                    : const Icon(Icons.check, color: Colors.green,),
+                    child: type == 'error'
+                        ? const Icon(
+                            Icons.dangerous,
+                            color: Colors.red,
+                          )
+                        : const Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          ),
                   ),
                   Expanded(
                     child: Column(
@@ -47,10 +52,11 @@ showSnackbar(context, message, { String type = 'error'}){
                         //   gradient: redGradient,
                         // ),
                         GradientText(
-                          gradient: type == 'error' ?  redGradient : greenGradient,
+                          gradient:
+                              type == 'error' ? redGradient : greenGradient,
                           '$message',
                           style: const TextStyle(
-                              fontSize: 14,
+                            fontSize: 14,
                           ),
                           // maxLines: 2,
                           // overflow: TextOverflow.ellipsis,
@@ -106,10 +112,9 @@ showSnackbar(context, message, { String type = 'error'}){
   ));
 }
 
-
 Future<void> searchWord(word) async {
-
-  final Uri _url = Uri.parse('https://www.google.com/search?q=$word meaning+in+english');
+  final Uri _url =
+      Uri.parse('https://www.google.com/search?q=$word meaning+in+english');
   if (!await launchUrl(_url)) {
     throw Exception('Could not launch $_url');
   }
