@@ -5,7 +5,13 @@ import 'GradientText.dart';
 import 'NeumorphismContainer.dart';
 
 class AuthComponent extends StatelessWidget {
-  AuthComponent({Key? key, required this.controller, this.padding = 20, this.text = 'text', this.obscureText = false}) : super(key: key);
+  AuthComponent(
+      {Key? key,
+      required this.controller,
+      this.padding = 20,
+      this.text = 'text',
+      this.obscureText = false})
+      : super(key: key);
 
   final TextEditingController controller;
   double? padding;
@@ -20,15 +26,19 @@ class AuthComponent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GradientText(text!, gradient: pinkGradient),
-          const SizedBox(height: 20,),
-          NeumorphismContainer(
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0,),
+              padding: const EdgeInsets.symmetric(
+                  // horizontal: 10.0,
+                  ),
               child: TextField(
                 controller: controller,
                 obscureText: obscureText!,
                 decoration: const InputDecoration(
-                  border: InputBorder.none
+                  border: OutlineInputBorder(),
                 ),
               ),
             ),

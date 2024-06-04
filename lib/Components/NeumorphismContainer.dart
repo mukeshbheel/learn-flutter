@@ -23,36 +23,37 @@ class NeumorphismContainer extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
           color: greyBackground,
-          borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : BorderRadius.circular(8),
+          borderRadius: borderRadius != null
+              ? BorderRadius.circular(borderRadius!)
+              : BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: greyShadowColor,
-              offset: Offset(4,4),
+              offset: Offset(4, 4),
               blurRadius: 20,
               spreadRadius: 1,
             ),
             BoxShadow(
               color: Colors.white,
-              offset: Offset(-5,-5),
+              offset: Offset(-5, -5),
               blurRadius: 15,
               spreadRadius: 1,
             ),
-          ]
-      ),
+          ]),
       child: child,
     );
   }
 }
 
 class NeumorphismContainerWithPadding extends StatelessWidget {
-  NeumorphismContainerWithPadding({
-    this.child,
-    Key? key,
-    this.width,
-    this.borderRadius,
-    this.horizontalPadding,
-    this.verticalPadding
-  }) : super(key: key);
+  NeumorphismContainerWithPadding(
+      {this.child,
+      Key? key,
+      this.width,
+      this.borderRadius,
+      this.horizontalPadding,
+      this.verticalPadding})
+      : super(key: key);
 
   Widget? child;
   double? width;
@@ -66,25 +67,27 @@ class NeumorphismContainerWithPadding extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 8, vertical: verticalPadding ?? 8),
+      padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding ?? 8, vertical: verticalPadding ?? 8),
       decoration: BoxDecoration(
           color: greyBackground,
-          borderRadius: borderRadius != null ? BorderRadius.circular(borderRadius!) : BorderRadius.circular(8),
+          borderRadius: borderRadius != null
+              ? BorderRadius.circular(borderRadius!)
+              : BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: greyShadowColor,
-              offset: Offset(4,4),
+              offset: Offset(4, 4),
               blurRadius: 20,
               spreadRadius: 1,
             ),
             BoxShadow(
               color: Colors.white,
-              offset: Offset(-5,-5),
+              offset: Offset(-5, -5),
               blurRadius: 15,
               spreadRadius: 1,
             ),
-          ]
-      ),
+          ]),
       child: child,
     );
   }

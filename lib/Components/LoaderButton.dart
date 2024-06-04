@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class LoaderButton extends StatelessWidget {
   LoaderButton({
     Key? key,
-    this.width : 100,
-    this.color : Colors.pink,
-    this.loaderSize : 20,
-    this.strokeWidth : 2,
+    this.width = 100,
+    this.color = Colors.pink,
+    this.loaderSize = 20,
+    this.strokeWidth = 2,
   }) : super(key: key);
 
   double width;
@@ -24,7 +24,10 @@ class LoaderButton extends StatelessWidget {
           SizedBox(
             width: loaderSize,
             height: loaderSize,
-            child:CircularProgressIndicator(color: color, strokeWidth: 2, ),
+            child: CircularProgressIndicator(
+              color: color,
+              strokeWidth: 2,
+            ),
           ),
         ],
       ),
