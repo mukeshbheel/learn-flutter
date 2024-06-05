@@ -8,7 +8,7 @@ import 'package:user_repository/src/user_repo.dart';
 class FirebaseUserRepo implements UserRepository {
 
   final FirebaseAuth _firebaseAuth;
-  final userCollection = FirebaseFirestore.instance.collection('userCollection');
+  final userCollection = FirebaseFirestore.instance.collection('users');
 
   FirebaseUserRepo({
     FirebaseAuth? firebaseAuth
