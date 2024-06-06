@@ -17,59 +17,61 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 30,
-        ),
-        AuthComponent(
-          controller: TextEditingController(),
-          text: 'Name',
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        AuthComponent(
-          controller: TextEditingController(),
-          text: 'Email',
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        AuthComponent(
-          controller: TextEditingController(),
-          text: 'Password',
-          obscureText: true,
-        ),
-        const SizedBox(
-          height: 40,
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          child: NeumorphismContainer(
-            child: GestureDetector(
-              onTap: () {},
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10),
-                  child: false
-                      ? LoaderButton()
-                      : GradientText(
-                          'Create Account',
-                          gradient: pinkGradient,
-                        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 30,
+          ),
+          AuthComponent(
+            controller: TextEditingController(),
+            text: 'Name',
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          AuthComponent(
+            controller: TextEditingController(),
+            text: 'Email',
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          AuthComponent(
+            controller: TextEditingController(),
+            text: 'Password',
+            obscureText: true,
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            child: NeumorphismContainer(
+              child: GestureDetector(
+                onTap: () {},
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10),
+                    child: false
+                        ? LoaderButton()
+                        : GradientText(
+                            'Create Account',
+                            gradient: pinkGradient,
+                          ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 40,
-        ),
-      ],
+          const SizedBox(
+            height: 40,
+          ),
+        ],
+      ),
     );
   }
 }

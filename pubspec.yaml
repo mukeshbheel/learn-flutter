@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^2.32.0
+  firebase_core:
   cupertino_icons: ^1.0.2
   flutter_google_places_hoc081098: ^1.2.0
   google_sign_in: ^6.0.2
@@ -37,6 +37,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^5.4.4
+  build_runner:
 
   flutter_lints: ^4.0.0
 
