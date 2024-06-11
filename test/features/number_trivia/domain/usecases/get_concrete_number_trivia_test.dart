@@ -9,10 +9,10 @@ import '../../../../helpers/test_helper.mocks.dart';
 
 // class MockNumberTriviaRepository extends Mock implements NumberTriviaRepository {}
 
-void main(){
+void main() {
   late GetConcreteNumberTrivia usecase;
   late MockNumberTriviaRepository mockNumberTriviaRepository;
-  setUp((){
+  setUp(() {
     mockNumberTriviaRepository = MockNumberTriviaRepository();
     usecase = GetConcreteNumberTrivia(mockNumberTriviaRepository);
   });
@@ -28,7 +28,7 @@ void main(){
           .thenAnswer((_) async => Right(tNumberTrivia));
 
       //act
-      final result = await usecase.execute(number : tNumber);
+      final result = await usecase(Params(number: tNumber));
 
       //assert
       expect(result, Right(tNumberTrivia));
@@ -36,6 +36,4 @@ void main(){
       verifyNoMoreInteractions(mockNumberTriviaRepository);
     },
   );
-
-
 }
