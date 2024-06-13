@@ -11,6 +11,7 @@ import 'package:learn_flutter/features/number_trivia/domain/entities/number_triv
     as _i6;
 import 'package:learn_flutter/features/number_trivia/domain/repositories/number_trivia_repository.dart'
     as _i3;
+import 'package:learn_flutter/features/number_trivia/domain/usecases/get_random_number_trivia.dart';
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
