@@ -45,7 +45,7 @@ dependencies:
   word_generator: ^0.4.3
   url_launcher: ^6.1.11
   flutter_html: ^3.0.0-beta.2
-  get: ^4.6.5
+  get: ^4.6.6
 
 
 dev_dependencies:
