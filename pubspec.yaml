@@ -22,6 +22,7 @@ dependencies:
   url_launcher: ^6.1.11
   flutter_html: ^3.0.0-beta.2
   get: ^4.6.5
+  cloud_firestore: 
 
   user_repository:
     path: packages/user_repository
