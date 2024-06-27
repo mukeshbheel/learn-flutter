@@ -34,6 +34,8 @@ dependencies:
 
 #  number_trivia packages
   dartz: ^0.10.1  # for functional programming handling error cases
+  internet_connection_checker: ^1.0.0+1
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
