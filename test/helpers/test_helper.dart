@@ -5,6 +5,7 @@ import 'package:learn_flutter/features/number_trivia/data/datasources/number_tri
 import 'package:learn_flutter/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 import 'package:mockito/annotations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 @GenerateMocks([
   NumberTriviaRepository,
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
   NumberTriviaRemoteDataSource,
   NetworkInfo,
   InternetConnectionChecker,
-  SharedPreferences
+  SharedPreferences,
+  http.Client
 ])
 void main() {}
