@@ -13,6 +13,8 @@ import 'package:internet_connection_checker/internet_connection_checker.dart'
     as _i4;
 import 'package:learn_flutter/core/error/failure.dart' as _i8;
 import 'package:learn_flutter/core/network/network_info.dart' as _i12;
+import 'package:learn_flutter/core/usecases/usecase.dart' as _i19;
+import 'package:learn_flutter/core/utils/input_converter.dart' as _i20;
 import 'package:learn_flutter/features/number_trivia/data/datasources/number_trivia_local_data_source.dart'
     as _i10;
 import 'package:learn_flutter/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart'
@@ -23,6 +25,10 @@ import 'package:learn_flutter/features/number_trivia/domain/entities/number_triv
     as _i9;
 import 'package:learn_flutter/features/number_trivia/domain/repositories/number_trivia_repository.dart'
     as _i6;
+import 'package:learn_flutter/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart'
+    as _i17;
+import 'package:learn_flutter/features/number_trivia/domain/usecases/get_random_number_trivia.dart'
+    as _i18;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i15;
 import 'package:shared_preferences/shared_preferences.dart' as _i13;
@@ -95,6 +101,17 @@ class _FakeResponse_4 extends _i1.SmartFake implements _i5.Response {
 class _FakeStreamedResponse_5 extends _i1.SmartFake
     implements _i5.StreamedResponse {
   _FakeStreamedResponse_5(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeNumberTriviaRepository_6 extends _i1.SmartFake
+    implements _i6.NumberTriviaRepository {
+  _FakeNumberTriviaRepository_6(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -756,4 +773,96 @@ class MockClient extends _i1.Mock implements _i5.Client {
         ),
         returnValueForMissingStub: null,
       );
+}
+
+/// A class which mocks [GetConcreteNumberTrivia].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetConcreteNumberTrivia extends _i1.Mock
+    implements _i17.GetConcreteNumberTrivia {
+  MockGetConcreteNumberTrivia() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.NumberTriviaRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeNumberTriviaRepository_6(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i6.NumberTriviaRepository);
+
+  @override
+  _i7.Future<_i2.Either<_i8.Failure, _i9.NumberTrivia>> call(
+          _i17.Params? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue:
+            _i7.Future<_i2.Either<_i8.Failure, _i9.NumberTrivia>>.value(
+                _FakeEither_0<_i8.Failure, _i9.NumberTrivia>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i7.Future<_i2.Either<_i8.Failure, _i9.NumberTrivia>>);
+}
+
+/// A class which mocks [GetRandomNumberTrivia].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetRandomNumberTrivia extends _i1.Mock
+    implements _i18.GetRandomNumberTrivia {
+  MockGetRandomNumberTrivia() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.NumberTriviaRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeNumberTriviaRepository_6(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i6.NumberTriviaRepository);
+
+  @override
+  _i7.Future<_i2.Either<_i8.Failure, _i9.NumberTrivia>> call(
+          _i19.NoParams? noParams) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [noParams],
+        ),
+        returnValue:
+            _i7.Future<_i2.Either<_i8.Failure, _i9.NumberTrivia>>.value(
+                _FakeEither_0<_i8.Failure, _i9.NumberTrivia>(
+          this,
+          Invocation.method(
+            #call,
+            [noParams],
+          ),
+        )),
+      ) as _i7.Future<_i2.Either<_i8.Failure, _i9.NumberTrivia>>);
+}
+
+/// A class which mocks [InputConverter].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockInputConverter extends _i1.Mock implements _i20.InputConverter {
+  MockInputConverter() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.Either<_i8.Failure, int>? stringToUnsignedInteger(String? inputString) =>
+      (super.noSuchMethod(Invocation.method(
+        #stringToUnsignedInteger,
+        [inputString],
+      )) as _i2.Either<_i8.Failure, int>?);
 }

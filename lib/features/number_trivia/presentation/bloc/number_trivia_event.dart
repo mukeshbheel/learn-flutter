@@ -7,9 +7,9 @@ sealed class NumberTriviaEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetTriviaForInputNumber extends NumberTriviaEvent {
+class GetTriviaForConcreteNumber extends NumberTriviaEvent {
   final String numberString;
-  const GetTriviaForInputNumber(this.numberString);
+  const GetTriviaForConcreteNumber(this.numberString);
 }
 
 class GetTriviaForRandomNumber extends NumberTriviaEvent {}
